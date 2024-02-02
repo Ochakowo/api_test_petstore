@@ -1,19 +1,26 @@
-version: '3'
+version: '3.8'
 
-# Используемые контейнеры
+
 services:
+
+  api-test_app:
+    build: .
+    image: "api-test_app"
+    volumes:
+      - .:/api_test_app
+      - allure_results:/api_test_app/allure-results
+
+
   allure:
-    # Образ
     image: "frankescobar/allure-docker-service"
     environment:
-      CHECK_RESULTS_EVERY_SECONDS: 1
-      KEEP_HISTORY: 1
+      CHECK_RESULTS_EVERY_SECONDS: 3
+      KEEP_HISTORY: 5
     ports:
       - "5050:5050"
     volumes:
       - allure_results:/app/allure-results
-      - allure_report:/app/allure-report
-      - allure_projects:/app/projects
+
 
   allure-ui:
     image: "frankescobar/allure-docker-service-ui"
@@ -23,15 +30,5 @@ services:
     ports:
       - "5252:5252"
 
-  api-test_app:
-    image: "api-test_app"
-    volumes:
-      - D:/Study/Python/exam:/api_test_app/tests
-      - allure_results:/api_test_app/allure-results
-    command: "tests/test_api.py"
 volumes:
-  allure_projects:
-  allure_report:
   allure_results:
-
-# Для запуска: docker-compose up
